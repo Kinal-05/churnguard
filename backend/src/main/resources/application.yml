@@ -1,0 +1,81 @@
+spring:
+  application:
+    name: churnguard-backend
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/churnguard}
+    username: ${SPRING_DATASOURCE_USERNAME:churnguard}
+    password: ${SPRING_DATASOURCE_PASSWORD:churnguard_dev_password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway migrations, not Hibernate auto-DDL
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000   # 60s default TTL for cached dashboard aggregates
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: churnguard-backend
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: com.churnguard.dto
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+churnguard:
+  jwt:
+    secret: ${JWT_SECRET:dev_only_secret_change_in_production_minimum_32_chars}
+    expiration-ms: 86400000   # 24h
+  ml-service:
+    base-url: ${ML_SERVICE_URL:http://localhost:8000}
+  kafka:
+    topics:
+      customer-events: customer.events
+      churn-predictions: churn.predictions
+  internal:
+    service-token: ${INTERNAL_SERVICE_TOKEN:dev_internal_token_change_in_production}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
+logging:
+  level:
+    com.churnguard: INFO
+    org.springframework.kafka: WARN
+    org.hibernate.SQL: WARN
