@@ -1,0 +1,13 @@
+{
+  "version": "v4",
+  "trained_at": "2026-06-20T13:02:55.383734+00:00",
+  "auc_score": 0.8228,
+  "precision_score": 0.2553,
+  "recall_score": 0.75,
+  "brier_score": 0.0683,
+  "training_samples": 1600,
+  "test_samples": 400,
+  "best_iteration": 11,
+  "threshold_used": 0.2,
+  "notes": "string"
+}

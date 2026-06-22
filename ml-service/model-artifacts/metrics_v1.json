@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "trained_at": "2026-06-19T13:27:22.116230",
+  "auc_score": 0.8228,
+  "precision_score": 0.0,
+  "recall_score": 0.0,
+  "brier_score": 0.0683,
+  "training_samples": 1600,
+  "test_samples": 400,
+  "best_iteration": 11,
+  "notes": "Initial training on synthetic dataset"
+}
